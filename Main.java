@@ -2,49 +2,62 @@ import java.util.Scanner;
 
 public class Main {
 
-    // Method to compress the input string
+    // Metodas suspausti eilutę, suskaičiuojant gretimų simbolių pasikartojimus
     public static String compressString(String s) {
+        // Jei eilutė tuščia, grąžiname tuščią eilutę
         if (s.isEmpty()) {
             return "";
         }
 
+        // StringBuilder naudojamas efektyvesniam eilutės konstravimui
         StringBuilder compressed = new StringBuilder();
-        char currentChar = s.charAt(0);
-        int count = 1;
+        char currentChar = s.charAt(0); // Išsaugome pirmąjį simbolį
+        int count = 1; // Skaičiuojame kiek kartų pasikartoja šis simbolis
 
+        // Pereiname per visą eilutę nuo antrojo simbolio
         for (int i = 1; i < s.length(); i++) {
             if (s.charAt(i) == currentChar) {
+                // Jei simbolis toks pat kaip ankstesnis, didiname skaitiklį
                 count++;
             } else {
+                // Jei simbolis keičiasi, pridedame esamą simbolį su skaičiumi prie rezultato
                 compressed.append(currentChar).append(count);
+                // Atnaujiname dabartinį simbolį ir nustatome skaitiklį į 1
                 currentChar = s.charAt(i);
                 count = 1;
             }
         }
+
+        // Pridedame paskutinį simbolį su jo pasikartojimo skaičiumi
         compressed.append(currentChar).append(count);
+
+        // Konvertuojame į eilutę ir grąžiname rezultatą
         return compressed.toString();
     }
 
-    // Method to decompress the input string
+    // Metodas atkurti originalią eilutę iš suspaustos versijos
     public static String decompressString(String s) {
+        // Jei eilutė tuščia, grąžiname tuščią eilutę
         if (s.isEmpty()) {
             return "";
         }
 
+        // StringBuilder naudojamas efektyviam eilutės atkūrimui
         StringBuilder decompressed = new StringBuilder();
         int length = s.length();
 
+        // Pereiname per kiekvieną simbolį suspaustoje eilutėje
         for (int i = 0; i < length; i++) {
-            char character = s.charAt(i);
-            int count = 0;
+            char character = s.charAt(i); // Išsaugome dabartinį simbolį
+            int count = 0; // Skaičius, kuris nurodys, kiek kartų reikia pakartoti simbolį
 
-            // Extract the number after the character
+            // Išskiriame skaičių, kuris seka po simbolio (gali būti kelių skaitmenų)
             while (i + 1 < length && Character.isDigit(s.charAt(i + 1))) {
-                count = count * 10 + (s.charAt(i + 1) - '0'); // Convert char to int
-                i++;
+                count = count * 10 + (s.charAt(i + 1) - '0'); // Konvertuojame skaičių iš simbolių į int
+                i++; // Einame toliau per eilutę
             }
 
-            // Append the character 'count' times
+            // Kartojame simbolį tiek kartų, kiek buvo nurodyta
             for (int j = 0; j < count; j++) {
                 decompressed.append(character);
             }
@@ -56,31 +69,32 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\nChoose an option:");
-            System.out.println("1. Compress a string");
-            System.out.println("2. Decompress a string");
-            System.out.println("3. Exit");
-            System.out.print("Enter your choice: ");
+            // Vartotojui pateikiamas meniu pasirinkimui
+            System.out.println("\nPasirinkite veiksmą:");
+            System.out.println("1. Suspausti eilutę");
+            System.out.println("2. Atkurti (dekompresuoti) eilutę");
+            System.out.println("3. Išeiti");
+            System.out.print("Įveskite savo pasirinkimą: ");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine(); // Suvartojame naujos eilutės simbolį po skaičiaus įvedimo
 
             switch (choice) {
                 case 1:
-                    System.out.print("Enter a string to compress: ");
+                    System.out.print("Įveskite eilutę suspaudimui: ");
                     String inputCompress = scanner.nextLine();
-                    System.out.println("Compressed String: " + compressString(inputCompress));
+                    System.out.println("Suspausta eilutė: " + compressString(inputCompress));
                     break;
                 case 2:
-                    System.out.print("Enter a compressed string to decompress: ");
+                    System.out.print("Įveskite suspaustą eilutę atkūrimui: ");
                     String inputDecompress = scanner.nextLine();
-                    System.out.println("Decompressed String: " + decompressString(inputDecompress));
+                    System.out.println("Atkurta eilutė: " + decompressString(inputDecompress));
                     break;
                 case 3:
-                    System.out.println("Exiting program...");
+                    System.out.println("Programa baigiama...");
                     scanner.close();
                     return;
                 default:
-                    System.out.println("Invalid choice! Please select 1, 2, or 3.");
+                    System.out.println("Neteisingas pasirinkimas! Pasirinkite 1, 2 arba 3.");
             }
         }
     }
